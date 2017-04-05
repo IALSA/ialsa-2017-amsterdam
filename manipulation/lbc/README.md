@@ -1,0 +1,1 @@
+This folder contains manipulation and estimation scripts of the study, after which it was named. 
