@@ -80,7 +80,7 @@ iadlsum,Instrumental activities of daily liviing,physical,iadlsum,physact,TRUE,T
 intrusion,Negative social exchange-intrusion-MAP,psychological,intrusion,NA,NA,NA,NA,,,,
 k,Potassium,clinical,k,NA,NA,NA,NA,,,,
 katzsum,Katz measure of disability,physical,katzsum,physcap,TRUE,TRUE,scale,,,,TRUE
-late_life_cogact_freq,Codnitive activity - late life,lifestyle,cogact_old,,TRUE,TRUE,category,,https://www.radc.rush.edu/docs/var/detail.htm?category=Lifestyle&subcategory=Cognitive%20Activity&variable=late_life_cogact_freq,,
+late_life_cogact_freq,Codnitive activity - late life,lifestyle,cogact_old,,TRUE,TRUE,category,TRUE,https://www.radc.rush.edu/docs/var/detail.htm?category=Lifestyle&subcategory=Cognitive%20Activity&variable=late_life_cogact_freq,,
 late_life_soc_act,Social activity - late life,lifestyle,socact_old,,TRUE,TRUE,category,,https://www.radc.rush.edu/docs/var/detail.htm?category=Lifestyle&subcategory=Social%20Engagement&variable=late_life_soc_act,,TRUE
 ldai_bl,Lifetime daily alcohol intake -baseline,substance,alco_life,alcohol,TRUE,FALSE,drinks/day,,,,
 ldlchlstrl,LDL cholesterol,clinical,ldlchlstrl,NA,NA,NA,NA,,,,
@@ -118,7 +118,7 @@ rosbsum,Rosow-Breslau scale,physical,rosbsum,physcap,TRUE,TRUE,scale,,,,TRUE
 scaled_to.x,Scaled parameter,design,scaled_to,NA,NA,NA,NA,,,,
 scaled_to.y,Scaled parameter,design,scaled_to.y,NA,NA,NA,NA,,,,
 smoking,Smoking,substance,smoking,smoking,TRUE,FALSE,category,TRUE,https://www.radc.rush.edu/docs/var/detail.htm;jsessionid=187364DADEF559C56D3E23DD4E03700B?category=Lifestyle&subcategory=Alcohol%20and%20Tobacco%20Use&variable=smoking,,
-soc_net,Social network size,lifestyle,soc_net,NA,NA,NA,NA,,https://www.radc.rush.edu/docs/var/detail.htm?category=Lifestyle&subcategory=Social%20Engagement&variable=soc_net,,TRUE
+soc_net,Social network size,lifestyle,soc_net,NA,NA,NA,NA,TRUE,https://www.radc.rush.edu/docs/var/detail.htm?category=Lifestyle&subcategory=Social%20Engagement&variable=soc_net,,TRUE
 social_isolation,Percieved social isolation,lifestyle,social_isolation,NA,NA,NA,NA,,https://www.radc.rush.edu/docs/var/detail.htm?category=Lifestyle&subcategory=Social%20Engagement&variable=social_isolation,,
 spanish,Spanish/Hispanic origin,demographic,spanish,race,TRUE,FALSE,category,,,,
 stroke_cum,Clinical Diagnoses - Stroke - cumulative,clinical,stroke_cum,stroke,FALSE,TRUE,category,TRUE,,,TRUE
