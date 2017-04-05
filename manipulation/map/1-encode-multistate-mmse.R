@@ -5,9 +5,9 @@ rm(list=ls(all=TRUE))  #Clear the variables from previous runs.
 # ---- load-sources ------------------------------------------------------------
 # Call `base::source()` on any repo file that defines functions needed below.  Ideally, no real operations are performed.
 source("./scripts/common-functions.R") # used in multiple reports
-source("./scripts/graph-presets.R") # fonts, colors, themes 
-source("./scripts/general-graphs.R")
-source("./scripts/specific-graphs.R")
+# source("./scripts/graph-presets.R") # fonts, colors, themes 
+# source("./scripts/general-graphs.R")
+# source("./scripts/specific-graphs.R")
 # ---- load-packages -----------------------------------------------------------
 # Attach these packages so their functions don't need to be qualified: http://r-pkgs.had.co.nz/namespace.html#search-path
 library(magrittr) #Pipes
@@ -112,17 +112,17 @@ for(i in 1:N){
   # ds_long <- ds_long_temp %>% 
   #   dplyr::select(id, fu_year, age_at_visit,died, age_death, mmse) %>% 
   #   as.data.frame()
-  (dta.i <- ds_long[ds_long$id==subjects[i],]) # select a single individual
-  # (dta.i <- ds_long[ds_long$id==6804844,]) # select a single individual # use this line for testing
-  (dta.i <- as.data.frame(dta.i %>% dplyr::arrange(-age_at_visit))) # enforce sorting
+  (dta.i                  <- ds_long[ds_long$id==subjects[i],]) # select a single individual
+  # (dta.i                <- ds_long[ds_long$id==6804844,]) # select a single individual # use this line for testing
+  (dta.i                  <- as.data.frame(dta.i %>% dplyr::arrange(-age_at_visit))) # enforce sorting
   (dta.i$missed_last_wave <- (cumsum(!is.na(dta.i$mmse))==0L)) # is the last obs missing?
-  (dta.i$presumed_alive   =  is.na(any(dta.i$age_at_death))) # can we presume subject alive?
-  # (dta.i$presumed_alive   =  is.na(any(dta.i$age_death))) # can we presume subject alive?
-  (dta.i$right_censored   = dta.i$missed_last_wave & dta.i$presumed_alive) # right-censored?
-  # dta.i$mmse_recoded     = determine_censor(dta.i$mmse, dta.i$right_censored) # use when tracing
-  (dta.i$mmse     <- determine_censor(dta.i$mmse, dta.i$right_censored)) # replace in reality
-  (dta.i <- as.data.frame(dta.i %>% dplyr::arrange(age_at_visit)))
-  (dta.i <- dta.i %>% dplyr::select(-missed_last_wave, -right_censored ))
+  (dta.i$presumed_alive   <-  is.na(any(dta.i$age_at_death))) # can we presume subject alive?
+  # (dta.i$presumed_alive <-  is.na(any(dta.i$age_death))) # can we presume subject alive?
+  (dta.i$right_censored   <- dta.i$missed_last_wave & dta.i$presumed_alive) # right-censored?
+  # dta.i$mmse_recoded    <- determine_censor(dta.i$mmse, dta.i$right_censored) # use when tracing
+  (dta.i$mmse             <- determine_censor(dta.i$mmse, dta.i$right_censored)) # replace in reality
+  (dta.i                  <- as.data.frame(dta.i %>% dplyr::arrange(age_at_visit)))
+  (dta.i                  <- dta.i %>% dplyr::select(-missed_last_wave, -right_censored ))
   # Rebuild the data:
   if(i==1){ds_miss <- dta.i}else{ds_miss <- rbind(ds_miss,dta.i)}
 } 
@@ -140,7 +140,7 @@ encode_multistates <- function(
   dead_state_value # value to represent dead state
 ){
   # declare arguments for debugging
-  # d = d,
+  # d = ds_miss
   # outcome_name = "mmse";age_name = "age_at_visit";age_death_name = "age_death";dead_state_value = 4
   (subjects <- sort(unique(d$id))) # list subject ids
   (N <- length(subjects)) # count subject ids
@@ -177,10 +177,10 @@ encode_multistates <- function(
 }
 
 ds_ms <- encode_multistates(
-  d = ds_miss,
-  outcome_name = "mmse",
-  age_name = "age_at_visit",
-  age_death_name = "age_death",
+  d                = ds_miss,
+  outcome_name     = "mmse",
+  age_name         = "age_at_visit",
+  age_death_name   = "age_at_death",
   dead_state_value = 4
 )
 # set.seed(NULL)

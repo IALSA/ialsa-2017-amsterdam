@@ -34,7 +34,7 @@ requireNamespace("testit") # for asserting conditions meet expected patterns.
 data_path_input  <- "../MAP/data-unshared/derived/dto.rds"
 # point to the local metadata to be used for this project (specific consumption)
 # metadata_path_input <- "./data/shared/meta/map/meta-data-map.csv" 
-metadata_path_input <- "./data/shared/meta/map/meta-data-map-2016-09-09.csv" 
+metadata_path_input <- "./data/shared/meta/map/meta-data-map-2016-11-27.csv" 
 
 # ---- load-data ------------------------------------------------
 # load data objects
