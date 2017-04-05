@@ -126,8 +126,8 @@ study,The particular RADC study (MAP/ROS/RMM),design,study,NA,NA,NA,NA,,,,
 thyroid_cum,Medical Conditions - thyroid disease - cumulative,clinical,thyroid_cum,NA,NA,NA,NA,,,,
 total_smell_test,NA,NA,total_smell_test,NA,NA,NA,NA,,,,
 unsympathetic,Negative social exchange-unsymapathetic-MAP,psychological,unsympathetic,NA,NA,NA,NA,,,,TRUE
-vasc_3dis_sum,"Vascular disease burden (3 items w/o chf)
-vasc_4dis_sum,"Vascular disease burden (4 items) - MAP/MARS
+vasc_3dis_sum,"Vascular disease burden (3 items w/o chf) ROS/MAP/MARS",clinical,vasc_3dis_sum,NA,NA,NA,NA,,,,
+vasc_4dis_sum,"Vascular disease burden (4 items) - MAP/MARS only",clinical,vasc_4dis_sum,NA,NA,NA,NA,,,,
 vasc_risks_sum,Vascular disease risk factors,clinical,vasc_risks_sum,NA,NA,NA,NA,,,,
 vision,Vision acuity,physical,vision,physcap,FALSE,TRUE,scale,,,,TRUE
 visionlog,Visual acuity,physical,visionlog,physcap,FALSE,TRUE,scale,,,,TRUE
