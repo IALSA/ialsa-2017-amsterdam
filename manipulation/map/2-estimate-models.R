@@ -14,7 +14,7 @@ base::source("./scripts/ELECT.r") # load  ELECT functions
 base::source("./scripts/ELECT-utility-functions.R") # ELECT utility functions
 
 # ---- declare-globals ---------------------------------------------------------
-path_folder <- "./data/shared/derived/models/model-b/"
+path_folder <- "./data/shared/derived/models/"
 digits = 2
 cat("\n Objected with fitted models will be saved in the folder : \n")
 cat("`",path_folder,"`")
@@ -23,7 +23,7 @@ cat("`",path_folder,"`")
 # first, the script `0-ellis-island.R` imports and cleans the raw data
 # second, the script `1-encode-multistate.R` augments the data with multi-states
 # load this data transfer object (dto)
-dto <- readRDS("./data/unshared/derived/dto.rds")
+dto <- readRDS("./data/unshared/derived/1-dto.rds")
 names(dto)
 names(dto$ms_mmse) 
 ds_miss <- dto$ms_mmse$missing # data after encoding missing states (-1, -2)
@@ -53,7 +53,7 @@ ids <- sample(unique(ds_miss$id),1) # view a random person for sporadic inspecti
 # 50402431 , 37125649, 50101073, 6804844, 83001827 , 56751351, 13485298, 56751351, 75507759)
 ids <- c(50402431) #96351191
 
-var_miss <- c("id", "fu_year","age_at_visit","age_death", "mmse" )
+var_miss <- c("id", "fu_year","age_at_visit","age_at_death", "mmse" )
 var_ms   <- c("id", "fu_year","age", "mmse","state" )
 cat("\n Demonstrate the mechanics of encoding states: \n")
 view_id(  
@@ -199,6 +199,13 @@ ds_clean %>%
 
 
 
+
+# ---- split-cogact-1 -----------
+# ---- split-cogact-2 -----------
+# ---- split-network_size-1 -----------
+# ---- split-network_size-2 -----------
+
+
 # ---- keep-only-legal-states --------------------------------
 # list ids with intermidiate missing (im) or right censored (rc) states
 ids_with_im    <- unique(ds_clean[ds_clean$state == -1, "id"]) 
@@ -209,13 +216,20 @@ ids_with_either <- unique(c(ids_with_im, ids_with_rc))
 cat("\n Number of subjects with either IMS or RC state(s) : ",length(ids_with_either) )
 ids_with_both   <- dplyr::intersect(ids_with_im, ids_with_rc)
 cat("\n Number of subjects with both IMS and RC state(s) : ",length(ids_with_both) )
+
+# save this version of the data
+# match selected ids to the raw versions of the data for descriptives
+
+dto[["ms_mmse"]][["model"]] <- ds_clean
+names(dto$ms_mmse)
+saveRDS(dto,"./data/unshared/derived/2-dto.rds")
+# save clean data object for records and faster access
+# saveRDS(ds_clean, "./data/unshared/derived/ds_clean.rds")
+
+
 # subset a random sample of individuals if needed
 set.seed(42)
 ids <- sample(unique(ds_clean$id), 100)
-
-
-# save clean data object for records and faster access
-saveRDS(ds_clean, "./data/unshared/ds_clean.rds")
 
 # ---- describe-age-composition -----------
 # # Time intervals in data:
@@ -270,22 +284,19 @@ ds <- ds_clean %>%
     # ,age_bl        # age at baseline     
     ,birth_year    # year of birth         
     ,male          # sex
-    ,sescat        # income at age 40  
     ,edu           # years of education
-    ,educat        # education categorized: low, med, high
-    # ,educatF       # education categorized: low, med, high (factor)             
-    ,edu_low_med   # dummy, edu low as compared to edu medium           
-    ,edu_low_high  # dummy, edu low as compared to edu high           
+    # ,cogact_old    # cognitive activity
+    # ,soc_net       # size of social network
     ,fu_year       # follow-up year       
     ,firstobs      # baseline indicator        
     ,age           # age at visit
     ,state         # outcome state encoded from mmse
   )
 # save the object to be used during estimation
-saveRDS(ds, "./data/unshared/ds_estimation.rds")
+saveRDS(ds, "./data/unshared/derived/ds_estimation.rds")
 
 # ---- inspect-before-estimation --------------------
-ds <- readRDS("./data/unshared/ds_estimation.rds")
+ds <- readRDS("./data/unshared/derived/ds_estimation.rds")
 # view data object to be passed to the estimation call
 cat("\n\n The following dataset will be passed to msm call (view for one person): \n")
 set.seed(44)

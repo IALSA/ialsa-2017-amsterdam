@@ -1,10 +1,10 @@
 # knitr::stitch_rmd(script="./manipulation/rename-classify.R", output="./manipulation/rename-classify.md")
 #These first few lines run only when the file is run in RStudio, !!NOT when an Rmd/Rnw file calls it!!
 rm(list=ls(all=TRUE))  #Clear the variables from previous runs.
-
+ 
 # ---- load-sources ------------------------------------------------------------
 # Call `base::source()` on any repo file that defines functions needed below.  Ideally, no real operations are performed.
-source("./scripts/common-functions.R") # used in multiple reports
+source("./scripts/function-common.R") # used in multiple reports
 # source("./scripts/graph-presets.R") # fonts, colors, themes 
 # source("./scripts/general-graphs.R")
 # source("./scripts/specific-graphs.R")
@@ -19,8 +19,8 @@ requireNamespace("testit", quietly=TRUE)
 # requireNamespace("plyr", quietly=TRUE)
 
 # ---- declare-globals ---------------------------------------------------------
-path_input <- "./data/unshared/derived/dto.rds"
-path_output <- "./data/unshared/derived/dto.rds"
+path_input <- "./data/unshared/derived/0-dto.rds"
+path_output <- "./data/unshared/derived/1-dto.rds"
 
 # ---- load-data ---------------------------------------------------------------
 # load the product of 0-ellis-island.R,  a list object containing data and metad
@@ -58,26 +58,26 @@ ds_long <- ds %>%
     edu       = as.numeric(educ)
   ) %>% 
   dplyr::select_(
-    "id"
-    ,"died"  
-    ,"age_at_death"
-    ,"male"
-    ,"edu"
-    # ,"birth_date" # perturbed data of birth
-    ,"birth_year" # the year of birth
-    # ,"date_at_bl" # date at baseline 
-    ,"age_at_bl" # age at baseline 
+     "id"              # personal identifier
+    ,"male"            # gender
+    ,"edu"             # years of education
+    ,"age_bl"          # age at baseline
+    ,"age_at_death"       # age at death
+    ,"died"            # death indicator
+    ,"birth_year"      # year of birth 
 # time-invariant above
     ,"fu_year" # Follow-up year ------------------------------------------------
 # time-variant below
-    ,"date_at_visit" # perturbed date of visit
-    ,"age_at_visit" #Age at cycle - fractional  
-    ,"mmse"
-    ,"income_40" # income at age 40
-    ,"cogact_old" # cognitive activity in late life
-    ,"socact_old" # social activity in late life
-    ,"soc_net" # social network size
-    ,"social_isolation" # loneliness   
+    ,"date_at_visit"    # perturbed date of visit
+    ,"age_at_visit"     # age at cycle - fractional  
+    ,"mmse"             # mini mental state exam (max =30)
+    ,"cogn_global"      # global cognition
+    ,"dementia"         # dementia diagnosis (?)
+    ,"income_40"        # income at age 40, proxy for SES
+    ,"cogact_old"       # cognitive activity in late life
+    ,"socact_old"       # social activity in late life
+    ,"soc_net"          # social network size
+    ,"social_isolation" # perceived loneliness
     ) 
 # save to disk for direct examination
 # write.csv(d,"./data/shared/musti-state-dementia.csv")  
@@ -199,23 +199,19 @@ correct_values_at_death <- function(
   ds[ds$state == dead_state_value, outcome_name] <- NA_real_
   return(ds)
 }
-# d <- ds_ms %>% correct_values_at_death("dementia", 4)
-# 
-# correct_these_variables <- c("dementia", "income_40", "date_at_visit","cogact_old",
-#                              "socact_old", "soc_net","social_isolation")
-
-# for(i in correct_these_variables){
-
+  # manually correct values for data_at_visit
   ds_ms[ds_ms$state == 4, "date_at_visit"] <- NA # because of date format
-  
+  # automatically correct values for time-variant measures
+  ds_ms <- ds_ms %>% correct_values_at_death("date_at_visit",4)
   ds_ms <- ds_ms %>% correct_values_at_death("dementia",4)
+  ds_ms <- ds_ms %>% correct_values_at_death("cogn_global",4)
   ds_ms <- ds_ms %>% correct_values_at_death("income_40",4)
   ds_ms <- ds_ms %>% correct_values_at_death("cogact_old",4)
   ds_ms <- ds_ms %>% correct_values_at_death("socact_old",4)
   ds_ms <- ds_ms %>% correct_values_at_death("soc_net",4)
   ds_ms <- ds_ms %>% correct_values_at_death("social_isolation",4)
-# }
 
+  # TODO: automate this step
 ds_ms %>% 
   dplyr::filter(id %in% ids) %>% 
   print()
@@ -237,14 +233,18 @@ print(head(ds_ms))
 # ---- inspect-created-multistates ----------------------------------
 # compare before and after ms encoding
 view_id <- function(ds1,ds2,id){
-  cat("Before ms encoding:","\n")
+  cat("Data set A:","\n")
   print(ds1[ds1$id==id,])
-  cat("\nAfter ms encoding","\n")
+  cat("\nData set B","\n")
   print(ds2[ds2$id==id,])
 }
 # view a random person for sporadic inspections
+set.seed(39)
 ids <- sample(unique(ds_miss$id),1)
+# ids <- 68914513
+view_id(ds_long, ds_miss, ids)
 view_id(ds_miss, ds_ms, ids)
+view_id(ds_long, ds_ms, ids)
 
 # ----- transitions-matrix -----------------------------
 # simple frequencies of states
@@ -257,28 +257,34 @@ knitr::kable(msm::statetable.msm(state,id,ds_ms))
 # Save as a compress, binary R dataset.  It's no longer readable with a text editor, but it saves metadata (eg, factor information).
 
 # at this point there exist two relevant data sets:
+# ds_long - subset of variables focal to the project
 # ds_miss - missing states are encoded
 # ds_ms   - multi   states are encoded
-# it is useful to have access to both while understanding/verifying encodings
+# it is useful to have access to all three while understanding/verifying encodings
 
 names(dto)
+# dto[["ms_mmse"]][["long"]]    <- ds_long
 dto[["ms_mmse"]][["missing"]] <- ds_miss
-dto[["ms_mmse"]][["multi"]] <- ds_ms
-saveRDS(dto, file="./data/unshared/derived/dto.rds", compress="xz")
+dto[["ms_mmse"]][["multi"]]   <- ds_ms
+names(dto$ms_mmse)
+saveRDS(dto, file=path_output, compress="xz")
 
 # ---- object-verification ------------------------------------------------
 # the production of the dto object is now complete
 # we verify its structure and content:
 dto <- readRDS("./data/unshared/derived/dto.rds")
 names(dto)
-# 1st element - unit(person) level data
-# dplyr::tbl_df(dto[["unitData"]])
+names(dto$ms_mmse)
+# 1st element - unit(person) level data, all variables available from the source
+dplyr::tbl_df(dto[["unitData"]])
 # 2nd element - meta data, info about variables
-# dto[["metaData"]]
+dto[["metaData"]] %>% tibble::as_tibble()
 # 3rd element - data for MMSE outcome
-# names(dto[["ms_mmse"]])
-ds_miss <- dto$ms_mmse$missing
-ds_ms <- dto$ms_mmse$multi
+names(dto[["ms_mmse"]])
+# dto$ms_mmse[["ds_long"]] # subset of variables focal to the project
+# dto$ms_mmse[["ds_miss"]] # missing states are encoded
+# dto$ms_mmse[["ds_ms"]]   # multi   states are encoded
+
 
 
 

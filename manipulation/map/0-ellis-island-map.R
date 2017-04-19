@@ -85,12 +85,12 @@ knitr::kable(meta_data)
 
 # Save as a compressed, binary R dataset.  
 # It's no longer readable with a text editor, but it saves metadata (eg, factor information).
-saveRDS(dto, file="./data/unshared/derived/dto.rds", compress="xz")
+saveRDS(dto, file="./data/unshared/derived/0-dto.rds", compress="xz")
 
 # ---- object-verification ------------------------------------------------
 # the production of the dto object is now complete
 # we verify its structure and content:
-dto <- readRDS("./data/unshared/derived/dto.rds")
+dto <- readRDS("./data/unshared/derived/0-dto.rds")
 names(dto)
 # 1st element - unit(person) level data
 # 2nd element - meta data, info about variables
