@@ -1,0 +1,157 @@
+---
+title: 'Model A : Estimation Results'
+output:
+  html_document:
+    css: ~/GitHub/ialsa-2016-amsterdam/libs/css/sidebar.css
+    highlight: tango
+    keep_md: yes
+    theme: flatly
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+<!-- These two chunks should be added in the beginning of every .Rmd that you want to source an .R script -->
+<!--  The 1st mandatory chunck  -->
+<!--  Set the working directory to the repository's base directory -->
+```{r set_root, echo=F, message=F} 
+#Don't combine this call with any other chunk 
+# cat("Working directory: ", getwd()) # check where you are
+  library(knitr)
+# Rmd is in "./reports/reportA/reportA.Rmd", but now the root is "./"
+  knitr::opts_knit$set(root.dir='../../')
+```
+
+<!--  The 2nd mandatory chunck  -->
+<!-- Set the report-wide options, and point to the external code file. -->
+```{r set_options, echo=F}
+# set options shared by all chunks
+opts_chunk$set(
+  results='show', 
+  message = TRUE,
+  comment = NA, 
+  tidy = FALSE,
+  fig.height = 4, 
+  fig.width = 5.5, 
+  out.width = "550px",
+  fig.path = 'figure_rmd/',     
+  dev = "png",
+  dpi = 100
+  # fig.path = 'figure_pdf/',     
+  # dev = "pdf"#,
+  # dev.args=list(pdf = list(colormodel = 'cmyk'))
+)
+echoChunks <- TRUE
+options(width=120) #So the output is 50% wider than the default.
+# connect to the file with the underlying R script
+read_chunk("./manipulation/map/2-estimate-model-A.R")
+```
+
+Estimation results of **Model A**, specified by the following input:
+```{r specify-model, echo=T, results='show', message=FALSE}
+```
+
+
+
+# Load environmet
+<!-- Load the sources.  Suppress the output when loading sources. --> 
+```{r load-sources, echo=echoChunks, message=FALSE}
+```
+
+<!-- Load 'sourced' R files.  Suppress the output when loading packages. --> 
+```{r load-packages, echo=echoChunks, message=FALSE}
+```
+
+<!-- Load any Global functions and variables declared in the R file.  Suppress the output. --> 
+```{r declare-globals, echo=F, results='show', message=FALSE}
+```
+
+# Load data
+<!-- Load the datasets.   -->
+```{r load-data, echo=echoChunks, results='hide', message=FALSE}
+```
+
+<!-- Inspect the datasets.   -->
+```{r inspect-data, echo=echoChunks, results='hide', message=FALSE}
+```
+
+
+```{r inspect-created-multistates, echo=echoChunks, results='show', message=FALSE}
+```
+
+# Remove cases
+```{r remove-invalid-cases, echo=T, results='show', message=FALSE}
+```
+
+# Age diagnostic
+```{r describe-age-composition, echo=echoChunks, results='show', message=FALSE, eval=T, out.width="900px", out.height="300px"}
+```
+
+# Estimation prep
+
+```{r centering-decisions, echo=echoChunks, results='show', message=FALSE}
+```
+
+```{r prepare-for-estimation, echo=echoChunks, results='show', message=FALSE}
+```
+## Final inspection
+```{r inspect-before-estimation, echo=echoChunks, results='show', message=FALSE}
+```
+
+# Specifications
+
+## Fitting functions
+```{r define-estimation-function, echo=T, results='show', message=FALSE}
+```
+
+## Support functions
+```{r define-support-functions, echo=T, results='show', message=FALSE}
+```
+
+## Model
+```{r specify-model, echo=T, results='show', message=FALSE}
+```
+
+## `msm` options
+```{r specify-msm-options, echo=T, results='show', message=FALSE}
+```
+
+```{r estimate-msm-models, echo=T, results='show', message=FALSE, eval=F}
+```
+
+# II. Version 1
+
+## Summary
+```{r msm1-1, echo=F, results='show', message=FALSE}
+```
+
+## Details
+```{r msm1-2, echo=F, results='show', message=FALSE}
+```
+
+## Hazards
+```{r msm1-3, echo=F, results='show', message=FALSE}
+```
+
+# II. Version 2
+
+## Summary
+```{r msm2-1, echo=F, results='show', message=FALSE}
+```
+
+## Details
+```{r msm2-2, echo=F, results='show', message=FALSE}
+```
+
+## Hazards
+```{r msm2-3, echo=F, results='show', message=FALSE}
+```
+
+
+# Session Info
+```{r}
+sessionInfo()
+
+```
+
+
