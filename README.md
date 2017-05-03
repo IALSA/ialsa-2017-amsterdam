@@ -9,9 +9,15 @@ Coordinated analysis with replication (CAR): A multi-study evaluation of healthy
 
 
 
-#### Preliminary results
+
 - Follow [`./utility/reproducibility-instructions.md`](utility/reproducibility-instructions.md) to create dynamic documents linked below:
-- [msm-estimation-map][msm-esteimation-map] review the results of MSM estimation
+
+
+# Modeling Results 
+
+| Review variables | MSM  | ELECT | Appendix |
+|---|---|---|---|
+|   |[MAP][msm-estimation-map]   |   |   |
 
 
 
