@@ -48,6 +48,12 @@ get_sample_size <- function(msm_object){
   N <- length(unique(msm_object$data$mf$`(subject)`))
   return(N)
 }
+
+for( i in names(ls_models) ){
+  toupper(i) %>% cat("---") 
+  cat(ls_models[[i]] %>% get_sample_size() )
+  cat("\n")
+}
 # ---- tweak-data-odds -----------------------------
 # create list object with tables of hazard ratios
 ls_odds <- list()
