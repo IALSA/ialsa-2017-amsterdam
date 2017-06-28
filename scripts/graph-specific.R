@@ -133,6 +133,12 @@ plot_odds <- function(
   # x <- ds_odds
   # study_ = levels_studies["octo"]
   # predictor_ = levels_predictors["age"]
+  # head(x)
+  # browser()
+  # yaxis = "trans"
+  # limit1 = "OCTO-Twin"
+  # limit2 = "Age"
+  
   if(yaxis =="trans"){
     d <- x %>%
       dplyr::filter(study == limit1) %>% 
@@ -164,10 +170,14 @@ plot_odds <- function(
                           height   = 0, 
                           linetype = "solid", 
                           size     = 0.5) 
-  g <- g + geom_point(size = 3, color="black") 
+  g <- g + geom_point(aes(fill= zero), shape=21, size = 3) 
+  # g <- g + scale_shape_manual(values = c("Linear"=24,"Quadratic"=22))
+  g <- g + scale_fill_manual(values = c("FALSE"="black","TRUE"="white"), guide=FALSE)
   # g <- g + facet_grid(predictor~study)
   g <- g + main_theme
+  g <- g + labs(fill=NULL)
   g
+  return(g)
   # g <- g + scale_shape_manual(values = c("TRUE"=21,"FALSE"=42))
   # g <- g + scale_shape_manual(values = c("Linear"=24,"Quadratic"=22))
   # g <- g + scale_color_manual(values = c("TRUE"="black","FALSE"=NA))
@@ -196,9 +206,15 @@ matrix_odds <- function(
   mat_cols,
   mat_row
 ){
+  # Values for testing and development
+  # x <- ds_odds
+  # yaxis = "trans"
+  # mat_cols = lvl_studies
+  # mat_row = "Age"
+  # 
   lst <- list()
   for(i in seq_along(mat_cols)){
-    lst[[i]] <- x %>% plot_odds(yaxis, mat_cols[i], mat_row )
+    lst[[i]] <- x %>% plot_odds(yaxis, names(mat_cols)[i], mat_row )
   }
   pm <- GGally::ggmatrix(
     lst,
@@ -221,7 +237,7 @@ matrix_odds <- function(
 # matrix_odds(ds_odds,"predictor",lvl_studies,"2-->4")
 # matrix_odds(ds_odds,"predictor",lvl_studies,"3-->4")
 # 
-# matrix_odds(ds_odds,"trans",lvl_studies,"age")
+# matrix_odds(ds_odds,"trans",names(lvl_studies),"Age")
 # matrix_odds(ds_odds,"trans",lvl_studies,"sex")
 # matrix_odds(ds_odds,"trans",lvl_studies,"edu_med_low")
 # matrix_odds(ds_odds,"trans",lvl_studies,"edu_high_low")
@@ -279,7 +295,7 @@ supermatrix_odds <- function(
   grid::grid.text(
     main_title, 
     vp = grid::viewport(layout.pos.row = 1, layout.pos.col = 1),
-    just = "left"
+    just = "right"
   )
   # print graphs
   for(i in seq_along(lst)){
