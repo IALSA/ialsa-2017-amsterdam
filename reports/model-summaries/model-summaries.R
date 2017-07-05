@@ -45,12 +45,12 @@ lvl_transitions <- c(
 #   , "State 3 - State 4" = "3-->4"
 # )
 lvl_studies <- c(
-   # "Whitehall"   = "wh"               
    "OCTO-Twin"   = "octo"                
   ,"MAP"         = "map"         
   ,"LASA"        = "lasa"          
   # ,"LBC1921"     = "lbc"             
   ,"H70"         = "h70"
+  ,"Whitehall"   = "wh"
 )
 
 # adds neat styling to your knitr table
