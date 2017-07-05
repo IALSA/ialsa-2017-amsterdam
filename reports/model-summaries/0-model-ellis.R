@@ -31,12 +31,12 @@ lbc  <- NULL #readRDS("./data/unshared/raw/models/msm-model-lbc1921.rds")
 wh   <- readRDS("./data/unshared/raw/models/msm-model-Whitehall.rds")
 # create list objects containing models with full msm estimation info
 ls_models <- list(
-  "octo" = octo,
-  "lasa" = lasa,
-  "wh"   = wh,
-  "h70"  = h70,
-  # "lbc"  = lbc,
-  "map"  = map
+   "octo" = octo
+  ,"lasa" = lasa
+  ,"wh"   = wh
+  #, "lbc"  = lbc
+  ,"map"  = map
+  ,"h70"  = h70
 )
 
 saveRDS(ls_models,"./data/unshared/derived/models/ls_models.rds")
@@ -59,7 +59,8 @@ for( i in names(ls_models) ){
 ls_odds <- list()
 for(i in names(ls_models)){
   # i <- 1
-  ls_odds[[i]] <- print_hazards( ls_models[[i]], dense = F) 
+  ls_odds[[i]] <- print_hazards( ls_models[[i]], dense = F) %>% 
+    dplyr::filter(!(HR==1L & L==1L & U==1L))
 } 
 # review the spellings of covariates 
 unique(ls_odds$octo$predictor) %>% as.character()
@@ -110,7 +111,8 @@ ds_long <- ds_odds %>%
 
 saveRDS(ds_long,"./data/shared/derived/summary-tables/table-odds.rds")
 
-ds_odds %>% dplyr::filter(study=="wh")
+# ds_odds %>% dplyr::filter(study=="wh")
+# ds_odds %>% dplyr::filter(study=="octo")
 ##############################
 ##### Life Expectancies ######
 ##############################
