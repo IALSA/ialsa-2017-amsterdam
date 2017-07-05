@@ -26,7 +26,7 @@ lvl_predictors <- c(
   ,"Social Network"    = "network"                     
   ,"Education"         = "edu"                     
   ,"Sex(M)"            = "male"                 
-  ,"Age"                = "age"                                 
+  ,"Age"               = "age"                                 
 )
 lvl_transitions <- c(
    "1-->2" = "State 1 - State 2"
@@ -45,12 +45,12 @@ lvl_transitions <- c(
 #   , "State 3 - State 4" = "3-->4"
 # )
 lvl_studies <- c(
-   "Whitehall"   = "wh"               
-  ,"OCTO-Twin"   = "octo"                
+   # "Whitehall"   = "wh"               
+   "OCTO-Twin"   = "octo"                
   ,"MAP"         = "map"         
   ,"LASA"        = "lasa"          
   # ,"LBC1921"     = "lbc"             
-  ,"H70"         = "h70"         
+  ,"H70"         = "h70"
 )
 
 # adds neat styling to your knitr table
@@ -77,8 +77,14 @@ neat <- function(x, output_format = "html",...){
 # ---- load-data -----------------------------
 # input list objects with estimated models from all studies
 ls_models <- readRDS("./data/unshared/derived/models/ls_models.rds")
+# lapply(ls_models, names) # quick view into the contents
 # input long data.frame of hazard ratios
 ds_odds_long <- readRDS("./data/shared/derived/summary-tables/table-odds.rds")
+# select only the studies in the list
+ds_odds_long <-  ds_odds_long %>% dplyr::filter(study %in% lvl_studies)
+# ds_odds_long %>% head()
+# ds_odds_long %>% 
+  # dplyr::distinct(transition, study)
 # input wide data.frame with life expectancies
 # ds_le_wide <-  readxl::read_excel("./data/shared/raw/misc/results.xlsx", sheet = "le")
 
@@ -100,6 +106,7 @@ ds_odds <- ds_odds_long %>%
     incoming = as.numeric(gsub(regex_state,"\\2",transition,perl=T)),
     trans = paste0(outgoing,"-->",incoming)
   ) %>%
+  # dplyr::filter(trans == "3-->2")
   # prepare factors
   dplyr::mutate(
     trans = factor(trans, levels = names(lvl_transitions)),
@@ -113,7 +120,9 @@ ds_odds <- ds_odds_long %>%
   )
 head(ds_odds)
 str(ds_odds)
-   
+ds_odds %>% dplyr::distinct(study,transition, trans)   %>% 
+  dplyr::arrange(trans)
+levels(ds_odds$trans)
 
 # groom life expectancies
 # regex_estimator <- "^(-?\\d+.\\d+)\\s*\\((\\d+.\\d+),\\s*(-?\\d+.\\d+)\\)$"
@@ -165,19 +174,20 @@ ds_odds_wide <- ds_odds_long %>%
   )  
 ds_odds_wide[is.na(ds_odds_wide)] <- "---"
 ds_odds_wide <- ds_odds_wide %>% 
-  dplyr::mutate(
-    include = ifelse(
-      h70 =="---" &
-        lasa =="---" &
-        # lbc =="---" &
-        map =="---" &
-        octo =="---" &
-        wh =="---"
-      , FALSE,TRUE)
-  ) %>% 
-  dplyr::filter(include==TRUE) %>% 
-  dplyr::arrange(predictor, transition) %>% 
-  dplyr::select(-include)
+  # dplyr::mutate(
+  #   include = ifelse(
+  #     # h70 =="---" &
+  #     lasa =="---" &
+  #     # lbc =="---" &
+  #     map =="---" &
+  #     octo =="---" &
+  #     wh =="---"
+  #     , FALSE,TRUE)
+  # ) %>% 
+  # dplyr::filter(include==TRUE) %>% 
+  # dplyr::select(-h70) %>% 
+  dplyr::arrange(predictor, transition) #%>% 
+  # dplyr::select(-include)
 
 
 
@@ -208,11 +218,11 @@ for(i in levels(ds_odds_wide$predictor)){
 # ---- print-plot-odds --------------------
 head(ds_odds)
 ds_odds <- ds_odds %>% 
-  dplyr::rename(est=HR,low=L,high=U) #%>% 
+  dplyr::rename(est=HR,low=L,high=U)
   # dplyr::mutate(study = as.character(study))
 head(ds_odds)  
 str(ds_odds)
-
+ds_odds %>% dplyr::distinct(trans)
 # ds_odds %>% plot_odds("trans", "OCTO-Twin", "Age")
 # ds_odds %>% plot_odds("study", "1-->4","Age")
 # ds_odds %>% plot_odds("study", "State 1 - State 4","Age")
