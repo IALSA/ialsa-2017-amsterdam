@@ -1,0 +1,108 @@
+---
+title: 'Review: model A'
+output:
+  html_document:
+    css: ~/GitHub/ialsa-2016-amsterdam/libs/css/sidebar.css
+    highlight: tango
+    keep_md: yes
+    theme: flatly
+    toc: yes
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+<!-- These two chunks should be added in the beginning of every .Rmd that you want to source an .R script -->
+<!--  The 1st mandatory chunck  -->
+<!--  Set the working directory to the repository's base directory -->
+```{r, echo=F, message=F} 
+#Don't combine this call with any other chunk 
+# cat("Working directory: ", getwd()) # check where you are
+  library(knitr)
+# Rmd is in "./reports/reportA/reportA.Rmd", but now the root is "./"
+  knitr::opts_knit$set(root.dir='../../') 
+```
+
+<!--  The 2nd mandatory chunck  -->
+<!-- Set the report-wide options, and point to the external code file. -->
+```{r set_options, echo=F}
+# set options shared by all chunks
+opts_chunk$set(
+  results='show', 
+  message = TRUE,
+  comment = NA, 
+  tidy = FALSE,
+  fig.height = 10, 
+  fig.width = 8, 
+  # out.width = "900px",
+  out.height= "800px",
+  fig.path = 'figure_rmd/v1/',     
+  dev = "png",
+  dpi = 100
+  # fig.path = 'figure_pdf/',     
+  # dev = "pdf"#,
+  # dev.args=list(pdf = list(colormodel = 'cmyk'))
+)
+echoChunks <- FALSE
+options(width=120) #So the output is 50% wider than the default.
+# connect to the file with the underlying R script  
+read_chunk("./reports/msm-model-review/msm-model-review.R") 
+```
+
+This report describes the results of `msm` estimation for the selected models. 
+
+# I. Exposition
+
+## Environment 
+<!-- Load 'sourced' R files.  Suppress the output when loading packages. --> 
+```{r load-packages, echo=T, message=FALSE}
+```
+
+<!-- Load the sources.  Suppress the output when loading sources. --> 
+```{r load-sources, echo=T, message=FALSE}
+```
+
+<!-- Load any Global functions and variables declared in the R file.  Suppress the output. --> 
+```{r declare-globals, echo=F, results='show', message=FALSE}
+```
+
+## Data 
+
+<!-- Load the datasets.   -->
+```{r load-data, echo=T, results='show', message=FALSE}
+```
+
+```{r load-models, echo=T, results='show', message=FALSE}
+```
+
+```{r load-data-target, echo=T, results='show', message=FALSE}
+```
+
+```{r inspect-data, echo=T, results='show', message=FALSE}
+```
+
+
+
+# II. Version 1
+
+## Summary
+```{r msm-1, echo=F, results='show', message=FALSE}
+```
+
+## Estimates
+```{r msm-2, echo=F, results='show', message=FALSE}
+```
+
+## Hazards
+```{r msm-3, echo=F, results='show', message=FALSE}
+```
+
+
+# Session Info
+```{r}
+sessionInfo()
+
+```
+
+
